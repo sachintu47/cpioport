@@ -1,5 +1,5 @@
 diff --git a/src/filetypes.h b/src/filetypes.h
-index e105ed0..2643495 100644
+index e105ed0..17492d1 100644
 --- a/src/filetypes.h
 +++ b/src/filetypes.h
 @@ -51,6 +51,7 @@
@@ -46,7 +46,7 @@ index e105ed0..2643495 100644
 +static inline mode_t
 +to_linux_mode(unsigned int inmode)
 +{
-+	mode_t outmode = (mode_t) (inmode & 0777);
++	mode_t outmode = (mode_t) (inmode & 07777);  /* Preserve all permission bits including setuid/setgid/sticky */
 +
 +	if ((inmode & ZOS_S_IFMT) == ZOS_S_IFIFO) { outmode |= LINUX_S_IFIFO; }
 +	if ((inmode & ZOS_S_IFMT) == ZOS_S_IFCHR) { outmode |= LINUX_S_IFCHR; }
@@ -61,7 +61,7 @@ index e105ed0..2643495 100644
 +static inline unsigned int
 +to_zos_mode(mode_t inmode)
 +{
-+	unsigned int outmode = (unsigned int) (inmode & 0777);
++	unsigned int outmode = (unsigned int) (inmode & 07777);  /* Preserve all permission bits including setuid/setgid/sticky */
 +	unsigned int file_type = inmode & 0170000;  /* Linux S_IFMT mask */
 +
 +        if (file_type == LINUX_S_IFIFO)  { outmode |= ZOS_S_IFIFO; }

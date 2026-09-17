@@ -1,5 +1,5 @@
 diff --git a/src/copyout.c b/src/copyout.c
-index 582e696..649994b 100644
+index 582e696..f3d7bd1 100644
 --- a/src/copyout.c
 +++ b/src/copyout.c
 @@ -335,8 +335,14 @@ write_out_new_ascii_header (const char *magic_string,
@@ -32,22 +32,23 @@ index 582e696..649994b 100644
    p += 6;
    to_ascii_or_warn (p, file_hdr->c_uid, 6, LG_8, file_hdr->c_name, _("uid"));
    p += 6;
-@@ -472,8 +484,13 @@ write_out_binary_header (dev_t rdev,
+@@ -472,9 +484,15 @@ write_out_binary_header (dev_t rdev,
    if (short_hdr.c_ino != file_hdr->c_ino)
      field_width_warning (file_hdr->c_name, _("inode number"));
  
 +#ifdef __MVS__
 +  /* On z/OS, convert from z/OS 32-bit mode to Linux 16-bit mode for portability */
 +  short_hdr.c_mode = to_linux_mode(file_hdr->c_mode);
++  /* No field width warning needed - conversion handles it */
 +#else
    short_hdr.c_mode = file_hdr->c_mode & 0xFFFF;
--  if (short_hdr.c_mode != file_hdr->c_mode)
-+#endif
-+  if (short_hdr.c_mode != (file_hdr->c_mode & 0xFFFF))
+   if (short_hdr.c_mode != file_hdr->c_mode)
      field_width_warning (file_hdr->c_name, _("file mode"));
++#endif
  
    short_hdr.c_uid = file_hdr->c_uid & 0xFFFF;
-@@ -652,7 +669,7 @@ process_copy_out (void)
+   if (short_hdr.c_uid != file_hdr->c_uid)
+@@ -652,7 +670,7 @@ process_copy_out (void)
  
  	  if (archive_format == arf_tar || archive_format == arf_ustar)
  	    {
