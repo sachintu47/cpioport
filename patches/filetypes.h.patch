@@ -1,5 +1,5 @@
 diff --git a/src/filetypes.h b/src/filetypes.h
-index e105ed0..e8799f5 100644
+index e105ed0..2045054 100644
 --- a/src/filetypes.h
 +++ b/src/filetypes.h
 @@ -51,6 +51,7 @@
@@ -10,10 +10,13 @@ index e105ed0..e8799f5 100644
  #define CP_IFMT 0170000		/* Mask for all file type bits.  */
  
  #if defined(S_ISBLK)
-@@ -78,6 +79,73 @@
+@@ -77,6 +78,75 @@
+ #if defined(S_ISNWK)
  # define CP_IFNWK 0110000
  #endif
- 
++#endif
++#ifdef __MVS__   /* z/OS */
++
 +#  define LINUX_S_IFIFO       0010000   /* [XSI] named pipe (fifo) */
 +#  define LINUX_S_IFCHR       0020000   /* [XSI] character special */
 +#  define LINUX_S_IFDIR       0040000   /* [XSI] directory */
@@ -80,7 +83,6 @@ index e105ed0..e8799f5 100644
 +#  define CP_IFIFO  ZOS_S_IFIFO 
 +#define CP_IFNWK 0
 +#endif
-+
+ 
  #ifndef S_ISLNK
  # define lstat stat
- #endif
